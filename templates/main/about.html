@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}关于我们 - 子午养生 · 静耳时光{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- 项目概述 -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold mb-4">关于我们</h1>
+            <p class="lead">子午养生 · 静耳时光</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h2 class="text-primary mb-4">项目概述</h2>
+                    <p class="lead">
+                        设计一个关于子午流注养生与耳鸣治疗的科普网站，结合传统中医理论与现代数据挖掘研究成果，
+                        为用户提供十二时辰养生指南和耳鸣穴位按摩推荐。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 目标用户 -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">目标用户</h2>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-users fa-3x text-primary"></i>
+                    </div>
+                    <h5>养生爱好者</h5>
+                    <p>对传统中医养生知识感兴趣的大众用户</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-deaf fa-3x text-success"></i>
+                    </div>
+                    <h5>耳鸣患者</h5>
+                    <p>希望通过中医调理缓解耳鸣症状的患者</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-user-md fa-3x text-warning"></i>
+                    </div>
+                    <h5>中医从业者</h5>
+                    <p>中医学生和从业者，用于学习和参考</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 网站功能 -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">网站功能</h2>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-clock"></i> 时辰提醒系统</h5>
+                </div>
+                <div class="card-body">
+                    <p>用户可以设置养生提醒，根据时间弹出相应的养生建议：</p>
+                    <ul class="list-unstyled">
+                        <li><strong>子时：</strong>建议23点前入睡</li>
+                        <li><strong>丑时：</strong>保持熟睡</li>
+                        <li><strong>寅时：</strong>保持深度睡眠</li>
+                        <li><strong>卯时：</strong>晨起喝温水、按摩腹部</li>
+                        <li><strong>辰时：</strong>吃好早餐</li>
+                        <li><strong>巳时：</strong>多喝水，避免食用刺激食物</li>
+                        <li><strong>午时：</strong>适度午睡</li>
+                        <li><strong>未时：</strong>吃好午餐</li>
+                        <li><strong>申时：</strong>多喝水</li>
+                        <li><strong>酉时：</strong>减少外出活动</li>
+                        <li><strong>戌时：</strong>保持心情舒畅</li>
+                        <li><strong>亥时：</strong>尽量在21点至23点入睡</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-book-medical"></i> 耳鸣日记功能</h5>
+                </div>
+                <div class="card-body">
+                    <p>记录耳鸣症状与按摩效果，包括：</p>
+                    <ul>
+                        <li>症状严重程度评估</li>
+                        <li>持续时间记录</li>
+                        <li>诱发因素分析</li>
+                        <li>按摩穴位选择</li>
+                        <li>按摩效果评价</li>
+                        <li>情绪状态记录</li>
+                        <li>睡眠质量评分</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 特色功能 -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">特色功能</h2>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-share-alt"></i> 社交分享</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>添加社交媒体分享按钮</li>
+                        <li>设计可下载的养生时刻表（截屏形式）</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0"><i class="fas fa-sync-alt"></i> 持续更新</h5>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>设计内容管理系统方便后续更新</li>
+                        <li>考虑添加用户问答或留言板功能</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 交互效果 -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h3 class="text-center mb-4">交互效果</h3>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item bg-transparent">
+                            <i class="fas fa-mouse-pointer text-primary me-2"></i>
+                            鼠标悬停在时辰区域时显示该时辰名称
+                        </li>
+                        <li class="list-group-item bg-transparent">
+                            <i class="fas fa-hand-pointer text-success me-2"></i>
+                            点击时辰进入对应时辰详情页
+                        </li>
+                        <li class="list-group-item bg-transparent">
+                            <i class="fas fa-yin-yang text-warning me-2"></i>
+                            太极图和耳朵图标有hover效果
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 免责声明 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> 重要声明</h4>
+                <p class="mb-3">
+                    本网站所提供的耳鸣相关科普内容仅供参考，旨在帮助用户初步了解耳鸣的相关知识，
+                    并非针对个体情况的专业医疗诊断、治疗方案或预防措施。
+                </p>
+                <p class="mb-3">
+                    耳鸣的成因复杂多样，涉及多种生理、病理和心理因素，其治疗需由具备执业资质的医生
+                    根据患者的具体病情、病史、检查结果等综合判断并制定个性化方案。
+                </p>
+                <p class="mb-3">
+                    本网站内容编撰过程中，参阅了部分公开的医学文献、专业书籍以及网络资料等。
+                    部分内容来源于公开资料，若涉及版权问题，请相关权利人及时通知我们。
+                    如有侵权内容，我们将依法核实后进行删除或修正。
+                </p>
+                <hr>
+                <p class="mb-0">
+                    <strong>在使用本网站内容时，请您务必保持理性和谨慎的态度，如有耳鸣等健康问题，
+                    建议尽早就医咨询专业医生，切勿单纯依赖网络科普内容进行自我诊断和治疗。</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

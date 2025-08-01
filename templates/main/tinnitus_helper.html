@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}耳鸣养生助手 - 子午养生 · 静耳时光{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5">
+                <i class="fas fa-stethoscope text-primary"></i> 耳鸣养生助手
+            </h1>
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+        <!-- 已登录用户的功能区域 -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-plus"></i> 记录耳鸣日记</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>记录今天的耳鸣症状、按摩效果和情绪状态，帮助您了解症状规律。</p>
+                        <a href="{% url 'tinnitus_log_create' %}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> 新建日记
+                        </a>
+                        <a href="{% url 'tinnitus_log_list' %}" class="btn btn-outline-primary ms-2">
+                            <i class="fas fa-list"></i> 查看历史
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-success">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-bell"></i> 时辰提醒</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>设置个性化的时辰养生提醒，让您不错过任何一个调理的黄金时间。</p>
+                        <a href="{% url 'reminder_settings' %}" class="btn btn-success">
+                            <i class="fas fa-cog"></i> 设置提醒
+                        </a>
+                        {% if reminders %}
+                            <span class="badge bg-success ms-2">已设置 {{ reminders.count }} 个提醒</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最近记录 -->
+        {% if recent_logs %}
+        <div class="row mb-5">
+            <div class="col-12">
+                <h3>最近的耳鸣记录</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>时辰</th>
+                                <th>严重程度</th>
+                                <th>持续时间</th>
+                                <th>症状</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in recent_logs %}
+                            <tr>
+                                <td>{{ log.date|date:"Y-m-d" }}</td>
+                                <td>
+                                    {% if log.time_slot %}
+                                        <span class="badge bg-secondary">{{ log.time_slot.chinese_name }}</span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if log.severity <= 2 %}success{% elif log.severity <= 3 %}warning{% else %}danger{% endif %}">
+                                        {{ log.get_severity_display }}
+                                    </span>
+                                </td>
+                                <td>{{ log.duration_minutes }} 分钟</td>
+                                <td>{{ log.symptoms|truncatechars:30 }}</td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">查看详情</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- 活跃提醒 -->
+        {% if reminders %}
+        <div class="row">
+            <div class="col-12">
+                <h3>您的提醒设置</h3>
+                <div class="row g-3">
+                    {% for reminder in reminders %}
+                    <div class="col-md-4">
+                        <div class="card border-info">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ reminder.time_slot.chinese_name }}</h6>
+                                <p class="card-text small">
+                                    {{ reminder.time_slot.start_time|time:"H:i" }} - {{ reminder.time_slot.end_time|time:"H:i" }}
+                                </p>
+                                <p class="card-text">
+                                    {% if reminder.custom_message %}
+                                        {{ reminder.custom_message|truncatechars:50 }}
+                                    {% else %}
+                                        {{ reminder.time_slot.health_tips|truncatechars:50 }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    {% else %}
+        <!-- 未登录用户的引导区域 -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-body text-center p-5">
+                        <div class="mb-4">
+                            <i class="fas fa-user-lock fa-4x text-muted"></i>
+                        </div>
+                        <h3 class="mb-4">登录后体验完整功能</h3>
+                        <p class="lead mb-4">
+                            登录您的账户，即可使用耳鸣日记记录、时辰提醒设置、个人数据分析等完整功能。
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-user-plus"></i> 立即注册
+                            </a>
+                            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">
+                                <i class="fas fa-sign-in-alt"></i> 登录账户
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- 功能介绍 -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="text-center mb-4">功能特色</h3>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <i class="fas fa-chart-line fa-3x text-primary"></i>
+                </div>
+                <h5>症状追踪</h5>
+                <p class="text-muted">详细记录耳鸣症状的严重程度、持续时间和相关因素，帮助您了解症状规律。</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <i class="fas fa-clock fa-3x text-success"></i>
+                </div>
+                <h5>时辰调理</h5>
+                <p class="text-muted">基于子午流注理论，在最佳时间进行针对性的穴位按摩和养生调理。</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <i class="fas fa-brain fa-3x text-warning"></i>
+                </div>
+                <h5>数据分析</h5>
+                <p class="text-muted">通过长期数据积累，分析耳鸣与时辰、情绪、睡眠等因素的关联性。</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

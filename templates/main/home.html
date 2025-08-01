@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load math_filters %}
+
+{% block title %}首页 - 子午养生 · 静耳时光{% endblock %}
+
+{% block extra_css %}
+<style>
+.time-circle {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin: 0 auto;
+    border: 3px solid #d4a574;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f5f5dc 0%, #fff8dc 100%);
+    box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+}
+
+.time-slot {
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    background: #9a4843;
+    color: white;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.time-slot:hover {
+    background: #8b0000;
+    transform: scale(1.1);
+    box-shadow: 0 2px 10px rgba(139, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.time-slot.current {
+    background: #ff6b6b;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+}
+
+.center-symbol {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23d4a574" stroke="%23333" stroke-width="2"/><path d="M50 10 A40 40 0 0 1 50 90 A20 20 0 0 0 50 50 A20 20 0 0 1 50 10" fill="%23333"/><path d="M50 90 A40 40 0 0 1 50 10 A20 20 0 0 0 50 50 A20 20 0 0 1 50 90" fill="%23fff"/><circle cx="50" cy="30" r="3" fill="%23fff"/><circle cx="50" cy="70" r="3" fill="%23333"/></svg>') center/contain no-repeat;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.center-symbol:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #f5f5dc 0%, #d4a574 100%);
+    padding: 100px 0;
+    color: #333;
+}
+
+.current-time-info {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.organ-labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.organ-label {
+    position: absolute;
+    background: rgba(212, 165, 116, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 英雄区域 -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">子午养生 · 静耳时光</h1>
+                <p class="lead mb-4">
+                    结合传统中医理论与现代数据挖掘研究成果，为您提供十二时辰养生指南和耳鸣穴位按摩推荐。
+                    根据子午流注规律，在合适的时间进行针对性的养生调理。
+                </p>
+                <div class="d-flex gap-3">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'tinnitus_log_create' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus"></i> 记录耳鸣日记
+                        </a>
+                        <a href="{% url 'reminder_settings' %}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-bell"></i> 设置提醒
+                        </a>
+                    {% else %}
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus"></i> 立即注册
+                        </a>
+                        <a href="{% url 'tinnitus_helper' %}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-stethoscope"></i> 了解更多
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                {% if current_time_slot %}
+                <div class="current-time-info text-center">
+                    <h3 class="text-primary mb-3">
+                        <i class="fas fa-clock"></i> 当前时辰：{{ current_time_slot.chinese_name }}
+                    </h3>
+                    <p class="mb-2"><strong>对应经络：</strong>{{ current_time_slot.meridian }}</p>
+                    <p class="mb-3"><strong>对应脏腑：</strong>{{ current_time_slot.organ }}</p>
+                    <p class="text-muted">{{ current_time_slot.health_tips|truncatechars:100 }}</p>
+                    <a href="{% url 'time_slot_detail' current_time_slot.name %}" class="btn btn-primary mt-3">
+                        查看详细信息
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 十二时辰圆形布局 -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">十二时辰养生指南</h2>
+            <p class="text-muted">点击时辰了解详细的养生建议和按摩方法</p>
+        </div>
+        
+        <div class="d-flex justify-content-center">
+            <div class="time-circle" id="timeCircle">
+                <!-- 中央太极图 -->
+                <div class="center-symbol" onclick="showTinnitusInfo()"></div>
+                
+                <!-- 脏腑标签层 -->
+                <div class="organ-labels" id="organLabels">
+                    {% for slot in time_slots %}
+                    <div class="organ-label organ-{{ forloop.counter0 }}" id="organ-{{ slot.name }}">
+                        {{ slot.organ }}
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- 时辰标签 -->
+                {% for slot in time_slots %}
+                <div class="time-slot time-slot-{{ forloop.counter0 }} {% if slot == current_time_slot %}current{% endif %}" 
+                     data-slot="{{ slot.name }}"
+                     data-organ="{{ slot.organ }}"
+                     onclick="location.href='{% url 'time_slot_detail' slot.name %}'">
+                    {{ slot.chinese_name|slice:":1" }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 功能特色 -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-clock fa-3x text-primary"></i>
+                        </div>
+                        <h5 class="card-title">时辰提醒系统</h5>
+                        <p class="card-text">根据十二时辰设置个性化养生提醒，帮助您在合适的时间进行健康调理。</p>
+                        <a href="{% url 'reminder_settings' %}" class="btn btn-outline-primary">设置提醒</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-book-medical fa-3x text-success"></i>
+                        </div>
+                        <h5 class="card-title">耳鸣日记功能</h5>
+                        <p class="card-text">记录耳鸣症状与按摩效果，帮助您了解症状规律，优化治疗方案。</p>
+                        <a href="{% url 'tinnitus_log_create' %}" class="btn btn-outline-success">记录日记</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-hand-point-up fa-3x text-warning"></i>
+                        </div>
+                        <h5 class="card-title">穴位按摩指导</h5>
+                        <p class="card-text">提供专业的穴位按摩指导，结合时辰养生理论，提升按摩效果。</p>
+                        <a href="{% url 'acupoint_list' %}" class="btn btn-outline-warning">查看穴位</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 鼠标悬停显示脏腑标签
+document.querySelectorAll('.time-slot').forEach((slot, index) => {
+    slot.addEventListener('mouseenter', function() {
+        const organLabel = document.querySelector('.organ-' + index);
+        if (organLabel) {
+            organLabel.style.opacity = '1';
+        }
+    });
+    
+    slot.addEventListener('mouseleave', function() {
+        const organLabel = document.querySelector('.organ-' + index);
+        if (organLabel) {
+            organLabel.style.opacity = '0';
+        }
+    });
+});
+
+// 中央太极图点击事件
+function showTinnitusInfo() {
+    {% if user.is_authenticated %}
+        window.location.href = "{% url 'tinnitus_helper' %}";
+    {% else %}
+        if (confirm('登录后可以使用完整的耳鸣养生助手功能，是否前往登录？')) {
+            window.location.href = "{% url 'login' %}";
+        }
+    {% endif %}
+}
+
+// 定时更新当前时辰
+function updateCurrentTimeSlot() {
+    fetch('{% url "current_time_slot_api" %}')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.error) {
+                // 移除所有current类
+                document.querySelectorAll('.time-slot').forEach(slot => {
+                    slot.classList.remove('current');
+                });
+                
+                // 为当前时辰添加current类
+                const currentSlot = document.querySelector(`[data-slot="${data.name}"]`);
+                if (currentSlot) {
+                    currentSlot.classList.add('current');
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// 每分钟更新一次当前时辰
+setInterval(updateCurrentTimeSlot, 60000);
+</script>
+{% endblock %}

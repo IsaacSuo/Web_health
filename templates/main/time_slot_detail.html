@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ time_slot.chinese_name }} - 时辰详情 - 子午养生 · 静耳时光{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- 返回按钮 -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- 时辰基本信息 -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="mb-0">
+                        <i class="fas fa-yin-yang"></i> {{ time_slot.chinese_name }}
+                        <small class="ms-2">{{ time_slot.start_time|time:"H:i" }} - {{ time_slot.end_time|time:"H:i" }}</small>
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-stream text-info"></i> 对应经络</h5>
+                            <p class="lead">{{ time_slot.meridian }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-heart text-danger"></i> 对应脏腑</h5>
+                            <p class="lead">{{ time_slot.organ }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 经络气血描述 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4><i class="fas fa-water text-info"></i> 经络气血</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{ time_slot.description }}</p>
+                </div>
+            </div>
+
+            <!-- 养生要点 -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4><i class="fas fa-leaf"></i> 养生要点</h4>
+                </div>
+                <div class="card-body">
+                    <p>{{ time_slot.health_tips }}</p>
+                </div>
+            </div>
+
+            <!-- 案例与建议 -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h4><i class="fas fa-lightbulb"></i> 案例与建议</h4>
+                </div>
+                <div class="card-body">
+                    <p>{{ time_slot.case_suggestions }}</p>
+                </div>
+            </div>
+
+            <!-- 饮食推荐 -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h4><i class="fas fa-utensils"></i> 饮食推荐</h4>
+                </div>
+                <div class="card-body">
+                    <p>{{ time_slot.food_recommendations }}</p>
+                </div>
+            </div>
+
+            <!-- 相关穴位 -->
+            {% if related_acupoints %}
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-hand-point-up text-warning"></i> 相关穴位按摩</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for acupoint in related_acupoints %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-warning">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        {{ acupoint.name }}
+                                        <span class="badge bg-secondary">{{ acupoint.get_body_part_display }}</span>
+                                    </h6>
+                                    <p class="card-text small">{{ acupoint.benefits|truncatechars:60 }}</p>
+                                    <a href="{% url 'acupoint_detail' acupoint.id %}" class="btn btn-outline-warning btn-sm">
+                                        查看详情
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            <!-- 时间信息 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-clock"></i> 时间信息</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td><strong>时辰：</strong></td>
+                            <td>{{ time_slot.chinese_name }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>时间：</strong></td>
+                            <td>{{ time_slot.start_time|time:"H:i" }} - {{ time_slot.end_time|time:"H:i" }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>经络：</strong></td>
+                            <td>{{ time_slot.meridian }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>脏腑：</strong></td>
+                            <td>{{ time_slot.organ }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 快速操作 -->
+            {% if user.is_authenticated %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-tools"></i> 快速操作</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'tinnitus_log_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> 记录耳鸣日记
+                        </a>
+                        <a href="{% url 'reminder_settings' %}" class="btn btn-success">
+                            <i class="fas fa-bell"></i> 设置提醒
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-user"></i> 用户功能</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="text-muted mb-3">登录后可使用更多功能</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'login' %}" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> 登录
+                        </a>
+                        <a href="{% url 'register' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-user-plus"></i> 注册
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- 相邻时辰 -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-arrow-left"></i><i class="fas fa-arrow-right"></i> 相邻时辰</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <small class="text-muted">上一时辰</small><br>
+                            <!-- 这里需要在视图中添加相邻时辰的逻辑 -->
+                            <a href="#" class="btn btn-outline-secondary btn-sm w-100 disabled">
+                                待实现
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">下一时辰</small><br>
+                            <a href="#" class="btn btn-outline-secondary btn-sm w-100 disabled">
+                                待实现
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 温馨提示 -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <h5 class="alert-heading"><i class="fas fa-info-circle"></i> 温馨提示</h5>
+                <p class="mb-2">
+                    以上内容基于传统中医理论，仅供参考。每个人的体质不同，建议在专业医师指导下进行养生调理。
+                </p>
+                <hr>
+                <p class="mb-0">
+                    如有严重健康问题，请及时就医，不要仅依赖网络信息进行自我诊断和治疗。
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

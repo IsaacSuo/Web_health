@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load math_filters %}
+
+{% block title %}个人资料 - 子午养生 · 静耳时光{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">
+                        <i class="fas fa-user"></i> 个人资料
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- 基本信息 -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="border-bottom pb-2 mb-3">基本信息</h4>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">用户名</label>
+                                <input type="text" class="form-control" value="{{ user.username }}" readonly>
+                                <div class="form-text">用户名不可修改</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.gender.id_for_label }}" class="form-label">{{ form.gender.label }}</label>
+                                {{ form.gender|add_class:"form-control" }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.birth_date.id_for_label }}" class="form-label">{{ form.birth_date.label }}</label>
+                                {{ form.birth_date|add_class:"form-control" }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.constitution_type.id_for_label }}" class="form-label">{{ form.constitution_type.label }}</label>
+                                {{ form.constitution_type|add_class:"form-control" }}
+                                <div class="form-text">如：湿热体质、阳虚体质等</div>
+                            </div>
+                        </div>
+
+                        <!-- 耳鸣相关信息 -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="border-bottom pb-2 mb-3">耳鸣相关信息</h4>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.tinnitus_start_date.id_for_label }}" class="form-label">{{ form.tinnitus_start_date.label }}</label>
+                                {{ form.tinnitus_start_date|add_class:"form-control" }}
+                                <div class="form-text">大致的开始时间</div>
+                            </div>
+                        </div>
+
+                        <!-- 健康信息 -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h4 class="border-bottom pb-2 mb-3">健康信息</h4>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.medical_history.id_for_label }}" class="form-label">{{ form.medical_history.label }}</label>
+                                {{ form.medical_history|add_class:"form-control" }}
+                                <div class="form-text">请详细描述您的病史，包括重大疾病、手术史等</div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="{{ form.current_medications.id_for_label }}" class="form-label">{{ form.current_medications.label }}</label>
+                                {{ form.current_medications|add_class:"form-control" }}
+                                <div class="form-text">目前正在服用的药物</div>
+                            </div>
+                            <div class="col-12">
+                                <label for="{{ form.lifestyle_notes.id_for_label }}" class="form-label">{{ form.lifestyle_notes.label }}</label>
+                                {{ form.lifestyle_notes|add_class:"form-control" }}
+                                <div class="form-text">饮食习惯、运动情况、睡眠规律等</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'tinnitus_helper' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> 返回
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> 保存资料
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 资料完善提示 -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="alert alert-info" role="alert">
+                        <h5 class="alert-heading"><i class="fas fa-info-circle"></i> 为什么要完善资料？</h5>
+                        <ul class="mb-0">
+                            <li><strong>个性化建议：</strong>根据您的体质和健康状况提供更精准的养生建议</li>
+                            <li><strong>症状分析：</strong>结合个人信息分析耳鸣症状的可能原因</li>
+                            <li><strong>安全保障：</strong>了解您的用药情况，避免建议中的冲突</li>
+                            <li><strong>效果追踪：</strong>长期跟踪健康变化，评估调理效果</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 隐私保护说明 -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="alert alert-success" role="alert">
+                        <h6><i class="fas fa-shield-alt"></i> 隐私保护承诺</h6>
+                        <p class="mb-0 small">
+                            我们严格保护您的个人隐私信息，所有健康数据仅用于为您提供个性化服务，
+                            不会泄露给第三方。您可以随时修改或删除这些信息。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

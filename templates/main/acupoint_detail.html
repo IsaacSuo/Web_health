@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ acupoint.name }} - 穴位详情 - 子午养生 · 静耳时光{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- 返回按钮 -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <a href="{% url 'acupoint_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> 返回穴位列表
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- 穴位基本信息 -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">
+                        <i class="fas fa-hand-point-up"></i> {{ acupoint.name }}
+                        <span class="badge bg-light text-dark ms-2">{{ acupoint.get_body_part_display }}</span>
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {% if acupoint.image %}
+                    <div class="row mb-4">
+                        <div class="col-md-6 mx-auto">
+                            <img src="{{ acupoint.image.url }}" class="img-fluid rounded shadow" alt="{{ acupoint.name }}">
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <h4><i class="fas fa-map-marker-alt text-danger"></i> 位置描述</h4>
+                    <p class="mb-4">{{ acupoint.location_description }}</p>
+
+                    <h4><i class="fas fa-hands text-info"></i> 按摩方法</h4>
+                    <p class="mb-4">{{ acupoint.massage_method }}</p>
+
+                    <h4><i class="fas fa-star text-warning"></i> 功效说明</h4>
+                    <p class="mb-4">{{ acupoint.benefits }}</p>
+
+                    {% if acupoint.related_time_slots.exists %}
+                    <h4><i class="fas fa-clock text-success"></i> 相关时辰</h4>
+                    <div class="row">
+                        {% for slot in acupoint.related_time_slots.all %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-success">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ slot.chinese_name }}</h6>
+                                    <p class="card-text small">
+                                        <strong>时间：</strong>{{ slot.start_time|time:"H:i" }} - {{ slot.end_time|time:"H:i" }}<br>
+                                        <strong>经络：</strong>{{ slot.meridian }}<br>
+                                        <strong>脏腑：</strong>{{ slot.organ }}
+                                    </p>
+                                    <a href="{% url 'time_slot_detail' slot.name %}" class="btn btn-outline-success btn-sm">
+                                        查看时辰详情
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- 按摩指导视频区域（预留） -->
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-play-circle text-primary"></i> 按摩指导</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="bg-light p-5 rounded">
+                        <i class="fas fa-video fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">按摩指导视频</h5>
+                        <p class="text-muted">功能开发中，敬请期待...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- 快速导航 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5><i class="fas fa-compass"></i> 快速导航</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="#location" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-map-marker-alt"></i> 位置描述
+                        </a>
+                        <a href="#method" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-hands"></i> 按摩方法
+                        </a>
+                        <a href="#benefits" class="btn btn-outline-warning btn-sm">
+                            <i class="fas fa-star"></i> 功效说明
+                        </a>
+                        {% if acupoint.related_time_slots.exists %}
+                        <a href="#time-slots" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-clock"></i> 相关时辰
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 注意事项 -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5><i class="fas fa-exclamation-triangle"></i> 注意事项</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="fas fa-dot-circle text-danger me-2"></i>
+                            按摩前确保手部清洁
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-dot-circle text-danger me-2"></i>
+                            力度适中，不可过重
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-dot-circle text-danger me-2"></i>
+                            孕妇请咨询医生后使用
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-dot-circle text-danger me-2"></i>
+                            如有不适请立即停止
+                        </li>
+                        <li>
+                            <i class="fas fa-dot-circle text-danger me-2"></i>
+                            持续按摩2-3周见效
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 相关链接 -->
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-link"></i> 相关链接</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'acupoint_list' %}?body_part={{ acupoint.body_part }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-search"></i> 查看同部位穴位
+                        </a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'tinnitus_log_create' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-plus"></i> 记录按摩效果
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'home' %}" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-home"></i> 返回首页
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}提醒设置 - 子午养生 · 静耳时光{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5">
+                <i class="fas fa-bell text-success"></i> 时辰提醒设置
+            </h1>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for slot in time_slots %}
+            <div class="col-lg-6 col-xl-4 mb-4">
+                <div class="card h-100 {% if slot.id in user_reminders and user_reminders.slot.id.is_active %}border-success{% endif %}">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">{{ slot.chinese_name }}</h5>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" 
+                                   name="reminder_{{ slot.id }}" 
+                                   id="reminder_{{ slot.id }}"
+                                   {% if slot.id in user_reminders and user_reminders.slot.id.is_active %}checked{% endif %}>
+                            <label class="form-check-label" for="reminder_{{ slot.id }}">
+                                启用
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <small class="text-muted">
+                                <i class="fas fa-clock"></i> {{ slot.start_time|time:"H:i" }} - {{ slot.end_time|time:"H:i" }}
+                            </small><br>
+                            <small class="text-muted">
+                                <i class="fas fa-stream"></i> {{ slot.meridian }} | {{ slot.organ }}
+                            </small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <strong>默认提醒内容：</strong>
+                            <p class="text-muted small mb-2">{{ slot.health_tips|truncatechars:80 }}</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="message_{{ slot.id }}" class="form-label small">自定义提醒内容（可选）：</label>
+                            <textarea class="form-control form-control-sm" 
+                                      name="message_{{ slot.id }}" 
+                                      id="message_{{ slot.id }}" 
+                                      rows="3" 
+                                      placeholder="留空则使用默认内容">{% if slot.id in user_reminders %}{{ user_reminders.slot.id.custom_message }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <small class="text-muted">
+                            {% if slot.id in user_reminders %}
+                                <i class="fas fa-check-circle text-success"></i> 已设置
+                            {% else %}
+                                <i class="fas fa-circle text-muted"></i> 未设置
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-save"></i> 保存设置
+                </button>
+                <a href="{% url 'tinnitus_helper' %}" class="btn btn-outline-secondary btn-lg ms-3">
+                    <i class="fas fa-arrow-left"></i> 返回
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <!-- 使用说明 -->
+    <div class="row mt-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <i class="fas fa-info-circle text-info"></i> 提醒功能说明
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>功能特点：</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>基于十二时辰理论</li>
+                                <li><i class="fas fa-check text-success me-2"></i>个性化提醒内容</li>
+                                <li><i class="fas fa-check text-success me-2"></i>灵活的开关控制</li>
+                                <li><i class="fas fa-check text-success me-2"></i>专业的养生建议</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>使用建议：</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-lightbulb text-warning me-2"></i>选择适合的时辰启用</li>
+                                <li><i class="fas fa-lightbulb text-warning me-2"></i>自定义符合个人情况的内容</li>
+                                <li><i class="fas fa-lightbulb text-warning me-2"></i>配合穴位按摩效果更佳</li>
+                                <li><i class="fas fa-lightbulb text-warning me-2"></i>坚持执行养成良好习惯</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning mt-3" role="alert">
+                        <small>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>注意：</strong>目前提醒功能仅在页面内展示，实际的推送提醒功能正在开发中。
+                            建议您收藏本页面，定时查看提醒内容。
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 时辰养生建议快览 -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3 class="text-center mb-4">十二时辰养生要点速览</h3>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>时辰</th>
+                            <th>时间</th>
+                            <th>经络脏腑</th>
+                            <th>养生要点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for slot in time_slots %}
+                        <tr>
+                            <td><strong>{{ slot.chinese_name }}</strong></td>
+                            <td><small>{{ slot.start_time|time:"H:i" }}-{{ slot.end_time|time:"H:i" }}</small></td>
+                            <td>
+                                <small>{{ slot.meridian }}<br>{{ slot.organ }}</small>
+                            </td>
+                            <td><small>{{ slot.health_tips|truncatechars:60 }}</small></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 提醒开关切换时的视觉反馈
+document.querySelectorAll('.form-check-input').forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+        const card = this.closest('.card');
+        if (this.checked) {
+            card.classList.add('border-success');
+        } else {
+            card.classList.remove('border-success');
+        }
+    });
+});
+</script>
+{% endblock %}

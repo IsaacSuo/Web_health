@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}我的耳鸣日记 - 子午养生 · 静耳时光{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>
+                    <i class="fas fa-book-medical text-primary"></i> 我的耳鸣日记
+                </h1>
+                <a href="{% url 'tinnitus_log_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> 新建日记
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if logs %}
+    <!-- 统计概览 -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h3>{{ logs.count }}</h3>
+                    <p class="mb-0">总记录数</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h3>{{ logs|length }}</h3>
+                    <p class="mb-0">本月记录</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <h3>-</h3>
+                    <p class="mb-0">平均严重程度</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <h3>-</h3>
+                    <p class="mb-0">常见时辰</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 日记列表 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">日记记录</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>日期</th>
+                                    <th>时辰</th>
+                                    <th>严重程度</th>
+                                    <th>频率</th>
+                                    <th>持续时间</th>
+                                    <th>症状</th>
+                                    <th>按摩效果</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ log.date|date:"m-d" }}</strong><br>
+                                        <small class="text-muted">{{ log.date|date:"Y" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if log.time_slot %}
+                                            <span class="badge bg-secondary">{{ log.time_slot.chinese_name }}</span><br>
+                                            <small class="text-muted">{{ log.time_slot.organ }}</small>
+                                        {% else %}
+                                            <span class="text-muted">未记录</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if log.severity <= 2 %}success{% elif log.severity <= 3 %}warning{% else %}danger{% endif %}">
+                                            {{ log.get_severity_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ log.get_frequency_display }}</span>
+                                    </td>
+                                    <td>{{ log.duration_minutes }} 分钟</td>
+                                    <td>
+                                        {% if log.symptoms %}
+                                            {{ log.symptoms|truncatechars:30 }}
+                                        {% else %}
+                                            <span class="text-muted">无</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if log.massage_effect %}
+                                            {{ log.massage_effect|truncatechars:20 }}
+                                        {% else %}
+                                            <span class="text-muted">无按摩</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-primary btn-sm" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#logModal{{ log.id }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <a href="#" class="btn btn-outline-secondary btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- 详情模态框 -->
+                                <div class="modal fade" id="logModal{{ log.id }}" tabindex="-1">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ log.date|date:"Y年m月d日" }} 的日记</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <h6>基本信息</h6>
+                                                        <table class="table table-sm">
+                                                            <tr><td>时辰：</td><td>{% if log.time_slot %}{{ log.time_slot.chinese_name }}{% else %}未记录{% endif %}</td></tr>
+                                                            <tr><td>严重程度：</td><td>{{ log.get_severity_display }}</td></tr>
+                                                            <tr><td>频率：</td><td>{{ log.get_frequency_display }}</td></tr>
+                                                            <tr><td>持续时间：</td><td>{{ log.duration_minutes }} 分钟</td></tr>
+                                                            <tr><td>情绪状态：</td><td>{{ log.mood|default:"未记录" }}</td></tr>
+                                                            <tr><td>睡眠质量：</td><td>{% if log.sleep_quality %}{{ log.sleep_quality }} 分{% else %}未记录{% endif %}</td></tr>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h6>症状描述</h6>
+                                                        <p>{{ log.symptoms|default:"无" }}</p>
+                                                        
+                                                        <h6>诱发因素</h6>
+                                                        <p>{{ log.triggers|default:"无" }}</p>
+                                                        
+                                                        <h6>按摩记录</h6>
+                                                        <p><strong>穴位：</strong>{{ log.massage_points|default:"无" }}</p>
+                                                        <p><strong>效果：</strong>{{ log.massage_effect|default:"无" }}</p>
+                                                    </div>
+                                                </div>
+                                                {% if log.notes %}
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <h6>备注</h6>
+                                                        <p>{{ log.notes }}</p>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- 空状态 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-book-open fa-4x text-muted mb-4"></i>
+                <h3 class="text-muted">还没有日记记录</h3>
+                <p class="text-muted mb-4">开始记录您的耳鸣症状，帮助了解症状规律</p>
+                <a href="{% url 'tinnitus_log_create' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus"></i> 创建第一条日记
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 使用提示 -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert alert-info" role="alert">
+                <h5 class="alert-heading"><i class="fas fa-chart-line"></i> 数据分析提示</h5>
+                <p class="mb-2">
+                    坚持记录耳鸣日记可以帮助您：
+                </p>
+                <ul class="mb-0">
+                    <li>发现耳鸣的时间规律和诱发因素</li>
+                    <li>评估不同穴位按摩的效果</li>
+                    <li>了解情绪、睡眠与耳鸣的关系</li>
+                    <li>为医生诊断提供详细的症状资料</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
