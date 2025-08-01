@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(cat \"/home/fangsuo/repos_web/web_ver_0.1/description.txt\")"
-    ],
-    "deny": []
-  },
-  "$schema": "https://json.schemastore.org/claude-code-settings.json"
-}
