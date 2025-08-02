@@ -73,7 +73,7 @@ def tinnitus_helper(request):
     return render(request, 'main/tinnitus_helper.html', context)
 
 
-@login_required
+@login_required(login_url='tinnitus_helper')
 def tinnitus_log_create(request):
     """创建耳鸣日记"""
     if request.method == 'POST':
@@ -99,7 +99,7 @@ def tinnitus_log_list(request):
     return render(request, 'main/tinnitus_log_list.html', context)
 
 
-@login_required
+@login_required(login_url='tinnitus_helper')
 def reminder_settings(request):
     """提醒设置"""
     time_slots = TimeSlot.objects.all()
@@ -159,7 +159,7 @@ def about(request):
     return render(request, 'main/about.html')
 
 
-@login_required
+# @login_required
 def profile(request):
     """用户资料"""
     profile, created = UserProfile.objects.get_or_create(user=request.user)
