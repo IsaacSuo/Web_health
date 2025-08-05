@@ -1,0 +1,403 @@
+/* 子午养生网站自定义样式 */
+
+:root {
+    --primary-color: #9a4843;
+    --secondary-color: #d4a574;
+    --accent-color: #8b0000;
+    --light-bg: #f5f5dc;
+    --text-color: #333;
+    --border-color: #ddd;
+}
+
+body {
+    font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', sans-serif;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* 导航栏样式 */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* 时辰圆形布局样式 */
+.time-circle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+    padding: 2rem 0;
+}
+
+.time-circle {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    border: 3px solid var(--secondary-color);
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--light-bg) 0%, #fff8dc 100%);
+    box-shadow: 0 0 30px rgba(212, 165, 116, 0.3);
+    margin: 0 auto;
+}
+
+.time-slot {
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    z-index: 5;
+}
+
+/* 十二时辰精确定位 - 按照时钟方向排列 */
+.time-slot-0 { top: 5px; left: 170px; }      /* 子时 - 12点位置 */
+.time-slot-1 { top: 30px; left: 245px; }     /* 丑时 - 1点位置 */
+.time-slot-2 { top: 85px; left: 310px; }     /* 寅时 - 2点位置 */
+.time-slot-3 { top: 170px; left: 340px; }    /* 卯时 - 3点位置 */
+.time-slot-4 { top: 255px; left: 310px; }    /* 辰时 - 4点位置 */
+.time-slot-5 { top: 320px; left: 245px; }    /* 巳时 - 5点位置 */
+.time-slot-6 { top: 345px; left: 170px; }    /* 午时 - 6点位置 */
+.time-slot-7 { top: 320px; left: 95px; }     /* 未时 - 7点位置 */
+.time-slot-8 { top: 255px; left: 30px; }     /* 申时 - 8点位置 */
+.time-slot-9 { top: 170px; left: 0px; }      /* 酉时 - 9点位置 */
+.time-slot-10 { top: 85px; left: 30px; }     /* 戌时 - 10点位置 */
+.time-slot-11 { top: 30px; left: 95px; }     /* 亥时 - 11点位置 */
+
+.time-slot:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: scale(1.15);
+    box-shadow: 0 4px 15px rgba(139, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.time-slot.current {
+    background: #ff6b6b;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { 
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); 
+    }
+    70% { 
+        box-shadow: 0 0 0 15px rgba(255, 107, 107, 0); 
+    }
+    100% { 
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); 
+    }
+}
+
+/* 中央太极图样式 */
+.center-symbol {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle at 50% 25%, #fff 25%, transparent 25%),
+                radial-gradient(circle at 50% 75%, #333 25%, transparent 25%),
+                linear-gradient(90deg, #333 50%, #fff 50%);
+    border: 3px solid var(--secondary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
+}
+
+.center-symbol:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 0 20px rgba(212, 165, 116, 0.6);
+}
+
+/* 脏腑标签样式 */
+.organ-labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.organ-label {
+    position: absolute;
+    background: rgba(212, 165, 116, 0.95);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 脏腑标签定位 - 在时辰标签内侧 */
+.organ-0 { top: 50px; left: 175px; }      /* 胆 */
+.organ-1 { top: 70px; left: 230px; }      /* 肝 */
+.organ-2 { top: 115px; left: 280px; }     /* 肺 */
+.organ-3 { top: 175px; left: 295px; }     /* 大肠 */
+.organ-4 { top: 235px; left: 280px; }     /* 胃 */
+.organ-5 { top: 285px; left: 230px; }     /* 脾 */
+.organ-6 { top: 305px; left: 175px; }     /* 心 */
+.organ-7 { top: 285px; left: 120px; }     /* 小肠 */
+.organ-8 { top: 235px; left: 75px; }      /* 膀胱 */
+.organ-9 { top: 175px; left: 55px; }      /* 肾 */
+.organ-10 { top: 115px; left: 75px; }     /* 心包 */
+.organ-11 { top: 70px; left: 120px; }     /* 三焦 */
+
+/* 卡片样式增强 */
+.card {
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* 按钮样式 */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* 表单样式 */
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(212, 165, 116, 0.25);
+}
+
+/* 英雄区域样式 */
+.hero-section {
+    background: linear-gradient(135deg, var(--light-bg) 0%, var(--secondary-color) 100%);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+}
+
+/* 当前时辰信息卡片 */
+.current-time-info {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+/* 页脚样式 */
+footer {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+}
+
+footer a {
+    color: #ecf0f1 !important;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: var(--secondary-color) !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .time-circle {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .time-slot {
+        width: 45px;
+        height: 25px;
+        font-size: 12px;
+    }
+    
+    /* 移动端时辰位置调整 */
+    .time-slot-0 { top: 5px; left: 127px; }      /* 子时 */
+    .time-slot-1 { top: 25px; left: 185px; }     /* 丑时 */
+    .time-slot-2 { top: 65px; left: 235px; }     /* 寅时 */
+    .time-slot-3 { top: 127px; left: 255px; }    /* 卯时 */
+    .time-slot-4 { top: 190px; left: 235px; }    /* 辰时 */
+    .time-slot-5 { top: 240px; left: 185px; }    /* 巳时 */
+    .time-slot-6 { top: 260px; left: 127px; }    /* 午时 */
+    .time-slot-7 { top: 240px; left: 70px; }     /* 未时 */
+    .time-slot-8 { top: 190px; left: 20px; }     /* 申时 */
+    .time-slot-9 { top: 127px; left: 0px; }      /* 酉时 */
+    .time-slot-10 { top: 65px; left: 20px; }     /* 戌时 */
+    .time-slot-11 { top: 25px; left: 70px; }     /* 亥时 */
+    
+    /* 移动端脏腑标签位置调整 */
+    .organ-0 { top: 40px; left: 130px; }
+    .organ-1 { top: 55px; left: 170px; }
+    .organ-2 { top: 85px; left: 205px; }
+    .organ-3 { top: 130px; left: 220px; }
+    .organ-4 { top: 175px; left: 205px; }
+    .organ-5 { top: 210px; left: 170px; }
+    .organ-6 { top: 225px; left: 130px; }
+    .organ-7 { top: 210px; left: 90px; }
+    .organ-8 { top: 175px; left: 55px; }
+    .organ-9 { top: 130px; left: 40px; }
+    .organ-10 { top: 85px; left: 55px; }
+    .organ-11 { top: 55px; left: 90px; }
+    
+    .center-symbol {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .hero-section {
+        padding: 3rem 0;
+        text-align: center;
+    }
+    
+    .current-time-info {
+        margin-top: 2rem;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .time-circle {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .time-slot {
+        width: 40px;
+        height: 22px;
+        font-size: 11px;
+    }
+    
+    /* 小屏幕时辰位置调整 */
+    .time-slot-0 { top: 5px; left: 105px; }      /* 子时 */
+    .time-slot-1 { top: 20px; left: 155px; }     /* 丑时 */
+    .time-slot-2 { top: 55px; left: 195px; }     /* 寅时 */
+    .time-slot-3 { top: 105px; left: 210px; }    /* 卯时 */
+    .time-slot-4 { top: 160px; left: 195px; }    /* 辰时 */
+    .time-slot-5 { top: 200px; left: 155px; }    /* 巳时 */
+    .time-slot-6 { top: 215px; left: 105px; }    /* 午时 */
+    .time-slot-7 { top: 200px; left: 55px; }     /* 未时 */
+    .time-slot-8 { top: 160px; left: 15px; }     /* 申时 */
+    .time-slot-9 { top: 105px; left: 0px; }      /* 酉时 */
+    .time-slot-10 { top: 55px; left: 15px; }     /* 戌时 */
+    .time-slot-11 { top: 20px; left: 55px; }     /* 亥时 */
+    
+    /* 小屏幕脏腑标签位置调整 */
+    .organ-0 { top: 35px; left: 108px; }
+    .organ-1 { top: 45px; left: 140px; }
+    .organ-2 { top: 70px; left: 170px; }
+    .organ-3 { top: 108px; left: 180px; }
+    .organ-4 { top: 145px; left: 170px; }
+    .organ-5 { top: 175px; left: 140px; }
+    .organ-6 { top: 185px; left: 108px; }
+    .organ-7 { top: 175px; left: 75px; }
+    .organ-8 { top: 145px; left: 45px; }
+    .organ-9 { top: 108px; left: 35px; }
+    .organ-10 { top: 70px; left: 45px; }
+    .organ-11 { top: 45px; left: 75px; }
+    
+    .center-symbol {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* 加载动画 */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(212, 165, 116, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--secondary-color);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 通知样式 */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 表格样式增强 */
+.table th {
+    background-color: var(--light-bg);
+    border-top: none;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+/* 徽章样式 */
+.badge {
+    font-size: 0.8em;
+    padding: 0.4em 0.6em;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
