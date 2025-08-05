@@ -19,7 +19,7 @@ def home(request):
     time_slots = TimeSlot.objects.all().order_by('start_time')
     
     # 获取当前时辰
-    current_time = timezone.now().time()
+    current_time = datetime.now().time()
     current_time_slot = None
     
     for slot in time_slots:
@@ -199,7 +199,7 @@ def register(request):
 
 def get_current_time_slot(request):
     """API：获取当前时辰信息"""
-    current_time = timezone.now().time()
+    current_time = datetime.now().time()
     time_slots = TimeSlot.objects.all()
     
     current_slot = None
