@@ -34,9 +34,10 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-4. **初始化基础数据**
+4. **初始化基础数据及收集静态数据**
 ```bash
 python manage.py init_data
+python manage.py collectstatic --noinput --clear
 ```
 
 5. **启动开发服务器**
@@ -47,7 +48,12 @@ python manage.py runserver
 6. **访问网站**
 打开浏览器访问 `http://127.0.0.1:8000`
 
-
+7. **设置staticfiles权限**
+```bash
+sudo chown -R www-data:www-data ./staticfiles/
+sudo chmod -R 644 ./staticfiles/css/style.css
+sudo chmod -R 755 ./staticfiles/css/
+```
 
 ## 管理后台
 访问 `http://127.0.0.1:8000/admin/` 进入管理后台
