@@ -175,7 +175,18 @@ class Command(BaseCommand):
             if created:
                 self.stdout.write(f'创建时辰: {time_slot.chinese_name}')
             else:
-                self.stdout.write(f'时辰已存在: {time_slot.chinese_name}')
+                # 检查是否需要更新
+                updated = False
+                for field, value in data.items():
+                    if field != 'name' and getattr(time_slot, field) != value:
+                        setattr(time_slot, field, value)
+                        updated = True
+                
+                if updated:
+                    time_slot.save()
+                    self.stdout.write(f'更新时辰: {time_slot.chinese_name}')
+                else:
+                    self.stdout.write(f'时辰未更新: {time_slot.chinese_name}')
 
     def init_acupoints(self):
         """初始化穴位数据"""
@@ -185,56 +196,64 @@ class Command(BaseCommand):
                 'body_part': 'ear',
                 'location_description': '位于面部，耳屏前，下颌骨髁状突的后方，张口时呈凹陷处。',
                 'massage_method': '用双手食指或中指指腹，轻柔地按压听宫穴，每次按压3-5秒，重复10-15次。按压时感到轻微酸胀感为宜。',
-                'benefits': '主治耳鸣、耳聋、听力减退等耳部疾病。能够疏通耳部经络，改善局部血液循环。'
+                'benefits': '主治耳鸣、耳聋、听力减退等耳部疾病。能够疏通耳部经络，改善局部血液循环。',
+                'image': 'acupoints/tingong.jpg'
             },
             {
                 'name': '翳风',
                 'body_part': 'ear',
                 'location_description': '位于耳垂后方，乳突与下颌骨之间的凹陷处。',
                 'massage_method': '用拇指或食指指腹，垂直按压翳风穴，力度适中，每次按压3-5秒，重复10-15次。',
-                'benefits': '治疗耳鸣、耳痛、面瘫等。有疏风解表、通利耳窍的作用。'
+                'benefits': '治疗耳鸣、耳痛、面瘫等。有疏风解表、通利耳窍的作用。',
+                'image': 'acupoints/yifeng.jpg'
             },
             {
                 'name': '耳门',
                 'body_part': 'ear',
                 'location_description': '位于面部，耳屏上切迹的前方，下颌骨髁状突的后缘，张口时呈凹陷处。',
                 'massage_method': '用食指指腹轻柔按压，配合小幅度的环形按摩，每次按摩1-2分钟。',
-                'benefits': '主治耳鸣、耳聋、耳痛等耳部疾病。能够开窍聪耳，疏通经络。'
+                'benefits': '主治耳鸣、耳聋、耳痛等耳部疾病。能够开窍聪耳，疏通经络。',
+                'image': 'acupoints/ermen.jpg'
             },
             {
                 'name': '百会',
                 'body_part': 'head',
                 'location_description': '位于头顶正中央，两耳尖连线与鼻梁中线的交叉点。',
                 'massage_method': '用中指指腹垂直按压，或用手掌轻抚按摩，每次按压10-20秒，重复5-10次。',
-                'benefits': '调节大脑功能，改善头部血液循环，对耳鸣、头痛、失眠有良好效果。'
+                'benefits': '调节大脑功能，改善头部血液循环，对耳鸣、头痛、失眠有良好效果。',
+                'image': 'acupoints/baihui.jpg'
             },
             {
                 'name': '风池',
                 'body_part': 'neck',
                 'location_description': '位于颈部，枕骨之下，胸锁乳突肌与斜方肌上端之间的凹陷处。',
                 'massage_method': '用双手拇指指腹，从下向上按压风池穴，力度适中，每次按压5-10秒，重复10次。',
-                'benefits': '疏风解表，通利官窍。对头痛、颈椎病引起的耳鸣有很好的缓解作用。'
+                'benefits': '疏风解表，通利官窍。对头痛、颈椎病引起的耳鸣有很好的缓解作用。',
+                'image': 'acupoints/fengchi.jpg'
             },
             {
                 'name': '太冲',
                 'body_part': 'foot',
                 'location_description': '位于足背，第一、二跖骨结合部之前的凹陷处。',
                 'massage_method': '用拇指指腹垂直按压，力度由轻到重，每次按压3-5秒，重复15-20次。',
-                'benefits': '疏肝解郁，平肝潜阳。对肝火旺盛引起的耳鸣、头痛、急躁易怒有良好效果。'
+                'benefits': '疏肝解郁，平肝潜阳。对肝火旺盛引起的耳鸣、头痛、急躁易怒有良好效果。',
+                'image': 'acupoints/taichong.jpg'
             },
             {
                 'name': '涌泉',
                 'body_part': 'foot',
                 'location_description': '位于足底，足前部凹陷处，约当足底2、3趾趾缝头端与足跟连线的前1/3与后2/3交点上。',
                 'massage_method': '用拇指指腹用力按压，或用拳头敲击，每次按压10-15秒，重复10-15次。',
-                'benefits': '补肾固本，引火归元。对肾虚引起的耳鸣、失眠、腰膝酸软有很好的调理作用。'
+                'benefits': '补肾固本，引火归元。对肾虚引起的耳鸣、失眠、腰膝酸软有很好的调理作用。',
+                'image': 'acupoints/yongquan.jpg'
             },
             {
                 'name': '神门',
                 'body_part': 'hand',
                 'location_description': '位于腕部，腕掌侧横纹尺侧端，尺侧腕屈肌腱的桡侧凹陷处。',
                 'massage_method': '用拇指指腹轻柔按压，配合小幅度的揉动，每次按摩2-3分钟。',
-                'benefits': '安神定志，清心除烦。对心神不宁引起的耳鸣、失眠、健忘有良好效果。'
+                'benefits': '安神定志，清心除烦。对心神不宁引起的耳鸣、失眠、健忘有良好效果。',
+                'image': 'acupoints/shenmen.jpg'
             }
         ]
 
@@ -246,4 +265,15 @@ class Command(BaseCommand):
             if created:
                 self.stdout.write(f'创建穴位: {acupoint.name}')
             else:
-                self.stdout.write(f'穴位已存在: {acupoint.name}')
+                # 检查是否需要更新
+                updated = False
+                for field, value in data.items():
+                    if field != 'name' and getattr(acupoint, field) != value:
+                        setattr(acupoint, field, value)
+                        updated = True
+                
+                if updated:
+                    acupoint.save()
+                    self.stdout.write(f'更新穴位: {acupoint.name}')
+                else:
+                    self.stdout.write(f'穴位未更新: {acupoint.name}')
