@@ -1,14 +1,18 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 from datetime import time
+from django.contrib.auth.models import User
 from main.models import TimeSlot, AcupointMassage
 
 
 class Command(BaseCommand):
-    help = '初始化十二时辰数据和穴位数据'
+    help = '初始化十二时辰数据、穴位数据和管理员用户'
 
     def handle(self, *args, **options):
         self.stdout.write('开始初始化数据...')
+        
+        # 初始化管理员用户
+        self.init_admin_user()
         
         # 初始化十二时辰数据
         self.init_time_slots()
@@ -17,6 +21,14 @@ class Command(BaseCommand):
         self.init_acupoints()
         
         self.stdout.write(self.style.SUCCESS('数据初始化完成！'))
+
+    def init_admin_user(self):
+        """初始化管理员用户"""
+        if not User.objects.filter(username='admin').exists():
+            User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+            self.stdout.write(self.style.SUCCESS('超级用户已创建: admin/admin123'))
+        else:
+            self.stdout.write('超级用户已存在: admin/admin123')
 
     def init_time_slots(self):
         """初始化十二时辰数据"""
