@@ -36,6 +36,14 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
+# CSRF设置 - 信任的来源
+CSRF_TRUSTED_ORIGINS = [
+    'https://121.40.45.190',
+    'http://121.40.45.190',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+
 # Application definition
 
 INSTALLED_APPS = [
