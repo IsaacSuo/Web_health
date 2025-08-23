@@ -27,6 +27,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['121.40.45.190','localhost','127.0.0.1']
 
+# CSRF设置 - 信任的来源
+CSRF_TRUSTED_ORIGINS = [
+    'https://121.40.45.190',
+    'http://121.40.45.190',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+
 
 # Application definition
 
@@ -44,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-#    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

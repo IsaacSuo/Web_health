@@ -5,7 +5,7 @@
 x86-64架构CPU，4GB以上内存，100GB以上存储空间
 
 开发该软件的操作系统
-Linux (WSL2) / Windows
+Linux (WSL2) + Windows
 
 软件开发环境 / 开发工具
 Python 3.12.3, Django 5.2.4, Visual Studio Code, Git

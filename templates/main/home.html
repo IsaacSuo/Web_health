@@ -166,19 +166,22 @@ document.querySelectorAll('.time-slot').forEach((slot, index) => {
     });
 });
 
-// 防止页面缩放
+// 防止页面缩放 - 仅在多指触控时阻止
 document.addEventListener('touchmove', function(e) {
-    if (e.scale !== 1) {
+    if (e.touches.length > 1) {
         e.preventDefault();
     }
 }, { passive: false });
 
-// 双击防缩放
+// 双击防缩放 - 仅阻止特定元素的双击缩放
 let lastTouchEnd = 0;
 document.addEventListener('touchend', function(e) {
     const now = (new Date()).getTime();
     if (now - lastTouchEnd <= 300) {
-        e.preventDefault();
+        // 只对时辰圆盘区域防止双击缩放，允许其他区域正常滚动
+        if (e.target.closest('.time-circle') || e.target.closest('.time-slot')) {
+            e.preventDefault();
+        }
     }
     lastTouchEnd = now;
 }, false);
